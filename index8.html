@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/rps.css" />
+    <title>Rock Paper Sizer</title>
+  </head>
+  <body>
+    <h1>Rock Paper Sizer</h1>
+   
+    <button class="choice-button"
+      onclick="
+  let computerChoice=  generateComputerChoice();
+    let resultMsg=getResult('Rock',computerChoice);
+    showResult('Rock', computerChoice, resultMsg);
+   
+    "
+    >
+    <img src="./img/Rock.png" alt="Rock" class="choice-img">
+    </button>
+    <button class="choice-button"
+      onclick="
+     computerChoice=  generateComputerChoice();
+     resultMsg=getResult('Paper',computerChoice);
+    showResult('Paper', computerChoice, resultMsg);
+   "
+    >
+    <img src="./img/Paper.jpeg" alt="Paper" class="choice-img">
+    </button>
+    <button class="choice-button"
+      onclick=" 
+    computerChoice=  generateComputerChoice();
+    resultMsg=getResult('Sizer',computerChoice);
+   showResult('Sizer', computerChoice, resultMsg);
+   "
+    >
+    <img src="./img/Sizer.png" alt="Sizer" class="choice-img">
+    </button>
+
+   
+    <h3 id="user-Choice"></h3>
+    <h3 id="Computer-Choice"></h3>
+    <h3 id="result-Choice"></h3>
+    <h3 id="score"></h3>
+
+    <button
+    onclick="localStorage.clear()
+      resetScore();"
+  >
+    Reset
+  </button>
+
+    <script>
+      let scoreStr = localStorage.getItem("Score");
+      let score;
+      resetScore(scoreStr);
+
+      function resetScore(scoreStr) {
+        score = scoreStr
+          ? JSON.parse(scoreStr)
+          : {
+              win: 0,
+              lost: 0,
+              tie: 0,
+            };
+
+        score.displayScore = function displayScore() {
+          return ` Score : Won:${score.win},Lost:${score.lost}, Tie:${score.tie}`;
+        };
+
+        showResult()
+      }
+      function generateComputerChoice() {
+        let randomNumber = Math.random() * 4;
+        if (randomNumber > 0 && randomNumber <= 1) {
+          return "Rock";
+        } else if (randomNumber > 1 && randomNumber <= 2) {
+          return "Paper";
+        } else {
+          return "Sizer";
+        }
+      }
+
+      function getResult(userMove, computerMove) {
+        if (userMove === "Rock") {
+          if (computerMove === "Paper") {
+            score.lost++;
+            return "Computer has won";
+          } else if (computerMove === "Rock") {
+            score.tie++;
+            return `It's a tie`;
+          } else if (computerMove === "Sizer") {
+            score.win++;
+            return "user won.";
+          }
+        } else if (userMove === "Paper") {
+          if (computerMove === "Paper") {
+            score.tie++;
+            return `It's a tie`;
+          } else if (computerChoice === "Rock") {
+            score.win++;
+            return "user won.";
+          } else if (computerChoice === "Sizer") {
+            score.lost++;
+            return "Computer has won";
+          }
+        } else {
+          if (computerMove === "Paper") {
+            score.win++;
+            return "user won.";
+          } else if (computerMove === "Rock") {
+            score.lost++;
+            return "Computer has won";
+          } else if (computerMove === "Sizer") {
+            score.tie++;
+            return `It's a tie`;
+          }
+        }
+      }
+
+      function showResult(userMove, computerMove, result) {
+        localStorage.setItem("Score", JSON.stringify(score));
+
+
+        document.querySelector("#user-Choice").innerText = 
+        userMove ? `You have Chosen ${userMove}` : "";
+        document.querySelector("#Computer-Choice").innerText = 
+        computerMove ?`You have Chosen ${computerMove}` :"";
+
+        document.querySelector("#result-Choice").innerText = 
+        result || "";
+        document.querySelector("#score").innerText = score.displayScore()
+
+       
+      }
+    </script>
+  </body>
+</html>
